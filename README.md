@@ -1,10 +1,32 @@
-## Satellite Crop Health Monitoring
+# 🌾 Satellite Crop Health Monitoring
 
-End-to-end crop monitoring app with a Flask backend and a rich dashboard UI. It combines NDVI-based health checks, AI-style disease detection (simulated), weather lookups, recommendations, and soil health guidance.
+**Smart agriculture platform combining satellite imagery analysis, AI disease detection, and precision farming tools.**
 
-Live site:
+A comprehensive web-based crop monitoring system that helps farmers make data-driven decisions through real-time health analytics, disease identification, weather integration, and personalized recommendations.
 
-https://satellite-crop-health.onrender.com
+## 🚀 Live Demo
+
+**Live site:** https://satellite-crop-health.onrender.com
+
+**Demo credentials:**
+- Username: `demo`
+- Password: `demo123`
+
+## 📋 Description
+
+This full-stack precision agriculture application empowers farmers with:
+
+- **🛰️ Satellite Health Analysis** - NDVI-based crop vigor assessment using simulated satellite data
+- **🔬 AI Disease Detection** - Upload crop images for instant disease identification with confidence scoring
+- **🌤️ Real-Time Weather** - Current conditions and forecasts via Open-Meteo API integration
+- **📍 Location-Based Insights** - Google Maps integration for field-specific weather and recommendations
+- **📚 Crop Knowledge Base** - Comprehensive database with seasonal filters and growth requirements
+- **🔧 Maintenance Guides** - Step-by-step care instructions for each crop lifecycle stage
+- **🌱 Soil Health Analysis** - pH testing and improvement recommendations
+- **📊 Historical Tracking** - View trends in crop health and disease patterns over time
+- **👤 User Profiles** - Personalized farm management and alert preferences
+
+Built with modern web technologies for a responsive, intuitive farmer experience.
 
 ## Features
 
