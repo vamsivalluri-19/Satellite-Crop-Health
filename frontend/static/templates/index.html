@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriTech - Smart Crop Health Monitoring</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&libraries=places&loading=async" async defer></script>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="login-page" class="page auth-page">
+        <div class="auth-container">
+            <div class="auth-box">
+                <div class="auth-header">
+                    <h1>🌾 AgriTech</h1>
+                    <p>Smart crop health monitoring with satellite insights, AI disease checks, and weather-based planning.</p>
+                </div>
+
+                <!-- Login Form -->
+                <div id="login-form" class="auth-form">
+                    <h2>Login</h2>
+                    <div class="form-group">
+                        <label for="login-username">Username</label>
+                        <input type="text" id="login-username" placeholder="Enter your username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" placeholder="Enter your password" required>
+                    </div>
+                    <button class="btn btn-primary" onclick="handleLogin()">Login</button>
+                    <p class="form-switch">Don't have an account? <a href="#" onclick="switchAuthForm()">Sign up</a></p>
+                </div>
+
+                <!-- Register Form (Hidden) -->
+                <div id="register-form" class="auth-form" style="display: none;">
+                    <h2>Create Account</h2>
+                    <div class="form-group">
+                        <label for="register-username">Username</label>
+                        <input type="text" id="register-username" placeholder="Choose a username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email</label>
+                        <input type="email" id="register-email" placeholder="Your email address" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" placeholder="Create a password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password-confirm">Confirm Password</label>
+                        <input type="password" id="register-password-confirm" placeholder="Confirm password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-first-name">First Name</label>
+                        <input type="text" id="register-first-name" placeholder="Your first name">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-last-name">Last Name</label>
+                        <input type="text" id="register-last-name" placeholder="Your last name">
+                    </div>
+                    <button class="btn btn-primary" onclick="handleRegister()">Sign Up</button>
+                    <p class="form-switch">Already have account? <a href="#" onclick="switchAuthForm()">Login</a></p>
+                </div>
+            </div>
+            <div class="auth-side">
+                <div class="auth-illustration">
+                    <img src="https://static.vecteezy.com/system/resources/previews/028/840/701/large_2x/3d-cartoon-character-of-a-hardworking-farmer-free-photo.jpg" alt="Farmer" class="farmer-image">
+                    <h3>Monitor Your Crops</h3>
+                    <p>Real-time satellite imagery analysis, disease detection, and weather guidance for smarter decisions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App (Hidden on Login) -->
+    <div id="app" style="display: none;">
+        <!-- Left Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="sidebar-logo">🌾 AgriTech</h1>
+                <p class="sidebar-subtitle">Crop Health Monitor</p>
+            </div>
+
+            <nav class="sidebar-menu">
+                <div class="menu-section">
+                    <h3 class="menu-title">Main</h3>
+                    <a href="#" class="nav-item" onclick="showPage('dashboard')">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="showPage('profile')">
+                        <i class="fas fa-user"></i>
+                        <span>Profile</span>
+                    </a>
+                </div>
+
+                <div class="menu-section">
+                    <h3 class="menu-title">Monitoring</h3>
+                    <a href="#" class="nav-item" onclick="showPage('health-check')">
+                        <i class="fas fa-heartbeat"></i>
+                        <span>Health Check</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="showPage('disease')">
+                        <i class="fas fa-microscope"></i>
+                        <span>Disease Detection</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="showPage('weather')">
+                        <i class="fas fa-cloud"></i>
+                        <span>Weather</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="showPage('weather-location')">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <span>Weather Map</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="showPage('history')">
+                        <i class="fas fa-history"></i>
+                        <span>History</span>
+                    </a>
+                </div>
+
+                <div class="menu-section">
+                    <h3 class="menu-title">Knowledge Base</h3>
+                    <a href="#" class="nav-item" onclick="showPage('recommendations')">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>Crop Tips</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="showPage('crop-database')">
+                        <i class="fas fa-database"></i>
+                        <span>Crops</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="showPage('maintenance')">
+                        <i class="fas fa-wrench"></i>
+                        <span>Maintain</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="showPage('soil-health')">
+                        <i class="fas fa-leaf"></i>
+                        <span>Soil</span>
+                    </a>
+                </div>
+
+                <div class="menu-section">
+                    <h3 class="menu-title">Account</h3>
+                    <a href="#" class="nav-item" onclick="handleLogout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar"><i class="fas fa-user-circle"></i></div>
+                    <div class="user-details">
+                        <p id="sidebar-username" class="username">User</p>
+                        <small>Online</small>
+                    </div>
+                </div>
+                <button class="notification-btn" onclick="toggleNotifications()" title="Notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notification-count">0</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="app-container">
+            <!-- Dashboard Page -->
+            <div id="dashboard" class="page">
+                <section class="hero-section">
+                    <div class="hero-content">
+                        <h1>Welcome back, <span id="dashboard-username">Farmer</span>!</h1>
+                        <p>Monitor your crops with AI-powered insights and satellite imagery</p>
+                    </div>
+                </section>
+
+                <div class="dashboard-grid">
+                    <!-- Quick Stats -->
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                            <h3>Total Fields</h3>
+                            <p class="stat-value" id="stat-fields">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                                <i class="fas fa-triangle-exclamation"></i>
+                            </div>
+                            <h3>Alerts</h3>
+                            <p class="stat-value" id="stat-alerts">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                                <i class="fas fa-cloud"></i>
+                            </div>
+                            <h3>Weather Updates</h3>
+                            <p class="stat-value" id="stat-weather">--</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <h3>Healthy Crops</h3>
+                            <p class="stat-value" id="stat-healthy">0%</p>
+                        </div>
+                    </div>
+
+                    <div class="section-intro">
+                        <div class="intro-item">
+                            <h4>Field Overview</h4>
+                            <p>Track total fields, health scores, alerts, and weather refresh status at a glance.</p>
+                        </div>
+                        <div class="intro-item">
+                            <h4>Quick Actions</h4>
+                            <p>Run health checks, disease detection, and weather lookups without leaving the dashboard.</p>
+                        </div>
+                        <div class="intro-item">
+                            <h4>Recent Activity</h4>
+                            <p>Review your latest analyses and alerts to stay on top of crop conditions.</p>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="quick-actions">
+                        <h2>Quick Actions</h2>
+                        <div class="action-cards">
+                            <button class="action-btn" onclick="showPage('health-check')">
+                                <i class="fas fa-ruler"></i>
+                                <span>Check Health</span>
+                            </button>
+                            <button class="action-btn" onclick="showPage('disease')">
+                                <i class="fas fa-flask"></i>
+                                <span>Detect Disease</span>
+                            </button>
+                            <button class="action-btn" onclick="showPage('weather')">
+                                <i class="fas fa-cloud-sun"></i>
+                                <span>View Weather</span>
+                            </button>
+                            <button class="action-btn" onclick="showPage('profile')">
+                                <i class="fas fa-sliders"></i>
+                                <span>Settings</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="recent-activity">
+                        <h2>Recent Activity</h2>
+                        <div id="recent-list" class="activity-list">
+                            <p class="empty-state">No recent activity</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Health Check Page -->
+            <div id="health-check" class="page" style="display: none;">
+                <div class="page-header">
+                    <h1><i class="fas fa-heartbeat"></i> Crop Health Check</h1>
+                    <p>Get NDVI values and crop health status using satellite imagery with a clear health score.</p>
+                </div>
+
+                <div class="section-intro">
+                    <div class="intro-item">
+                        <h4>What You Get</h4>
+                        <p>NDVI score, health rating, and actionable recommendations based on vegetation vigor.</p>
+                    </div>
+                    <div class="intro-item">
+                        <h4>How It Works</h4>
+                        <p>We fetch simulated satellite data and compute a health score for your field.</p>
+                    </div>
+                    <div class="intro-item">
+                        <h4>Saved to History</h4>
+                        <p>Each check is stored so you can track trends over time.</p>
+                    </div>
+                </div>
+
+                <div class="page-content">
+                    <div class="form-section">
+                        <h2>Enter Field Details</h2>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="health-latitude">Latitude</label>
+                                <input type="number" id="health-latitude" placeholder="e.g., 40.7128" step="0.0001" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="health-longitude">Longitude</label>
+                                <input type="number" id="health-longitude" placeholder="e.g., -74.0060" step="0.0001" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="health-field-name">Field Name</label>
+                                <input type="text" id="health-field-name" placeholder="e.g., North Field" required>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-lg" onclick="checkCropHealth()">
+                            <i class="fas fa-satellite"></i> Analyze Crop Health
+                        </button>
+                    </div>
+
+                    <div id="health-result" class="result-box" style="display: none;">
+                        <h2>Health Analysis Results</h2>
+                        <div id="health-details"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Disease Detection Page -->
+            <div id="disease" class="page" style="display: none;">
+                <div class="page-header">
+                    <h1><i class="fas fa-microscope"></i> Disease Detection</h1>
+                    <p>Upload crop images for AI-powered disease detection, confidence scoring, and treatments.</p>
+                </div>
+
+                <div class="section-intro">
+                    <div class="intro-item">
+                        <h4>Best Photo Tips</h4>
+                        <p>Use good lighting, capture a single leaf, and avoid blurry or distant shots.</p>
+                    </div>
+                    <div class="intro-item">
+                        <h4>Confidence Score</h4>
+                        <p>We return a confidence percentage with recommended next steps.</p>
+                    </div>
+                    <div class="intro-item">
+                        <h4>Treatment Guidance</h4>
+                        <p>See a checklist of prevention and treatment actions after analysis.</p>
+                    </div>
+                </div>
+
+                <div class="page-content">
+                    <div class="form-section">
+                        <h2>Upload Crop Image</h2>
+                        <div class="upload-area" onclick="triggerUpload()">
+                            <input type="file" id="disease-image-input" accept="image/*" style="display: none;">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <h3>Click to upload or drag and drop</h3>
+                            <p>PNG, JPG or GIF (max. 10MB)</p>
+                        </div>
+
+                        <div id="disease-image-preview" style="display: none; text-align: center; margin-top: 2rem;">
+                            <img id="preview-img" style="max-width: 400px; border-radius: 8px; margin-bottom: 1rem;">
+                            <button class="btn btn-secondary" onclick="clearImagePreview()">Change Image</button>
+                        </div>
+
+                        <button class="btn btn-primary btn-lg" id="analyze-btn" onclick="detectDisease()" style="display: none; margin-top: 1rem;">
+                            <i class="fas fa-wand-magic-sparkles"></i> Analyze Image
+                        </button>
+                    </div>
+
+                    <div id="disease-result" class="result-box" style="display: none;">
+                        <h2>Disease Detection Results</h2>
+                        <div id="disease-details"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weather Page -->
+            <div id="weather" class="page" style="display: none;">
+                <div class="page-header">
+                    <h1><i class="fas fa-cloud"></i> Weather Information</h1>
+                    <p>Real-time weather forecasts for your farming location, including temperature and rain.</p>
+                </div>
+
+                <div class="section-intro">
+                    <div class="intro-item">
+                        <h4>Current Conditions</h4>
+                        <p>See temperature, humidity, and precipitation to plan daily operations.</p>
+                    </div>
+                    <div class="intro-item">
+                        <h4>Daily Outlook</h4>
+                        <p>Get a quick look at min/max temperature and expected rainfall.</p>
+                    </div>
+                    <div class="intro-item">
+                        <h4>Smart Planning</h4>
+                        <p>Use forecasts to optimize irrigation, spraying, and harvesting schedules.</p>
+                    </div>
+                </div>
+
+                <div class="page-content">
+                    <div class="form-section">
+                        <h2>Enter Location</h2>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="weather-latitude">Latitude</label>
+                                <input type="number" id="weather-latitude" placeholder="e.g., 40.7128" step="0.0001" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="weather-longitude">Longitude</label>
+                                <input type="number" id="weather-longitude" placeholder="e.g., -74.0060" step="0.0001" required>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-lg" onclick="getWeatherData()">
+                            <i class="fas fa-wind"></i> Get Weather
+                        </button>
+                    </div>
+
+                    <div id="weather-result" class="result-box" style="display: none;">
+                        <h2>Weather Report</h2>
+                        <div id="weather-details"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Page -->
+            <div id="history" class="page" style="display: none;">
+                <div class="page-header">
+                    <h1><i class="fas fa-history"></i> Activity History</h1>
+                    <p>View your past crop analyses and disease detections with timestamps and details.</p>
+                </div>
+
+                <div class="section-intro">
+                    <div class="intro-item">
+                        <h4>Two Views</h4>
+                        <p>Switch between crop health checks and disease detection history.</p>
+                    </div>
+                    <div class="intro-item">
+                        <h4>Track Trends</h4>
+                        <p>Monitor NDVI changes and recurring disease risks across seasons.</p>
+                    </div>
+                    <div class="intro-item">
+                        <h4>Decision Support</h4>
+                        <p>Use history to refine treatments and irrigation timing.</p>
+                    </div>
+                </div>
+
+                <div class="page-content">
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="switchHistoryTab('crop')">Crop Health</button>
+                        <button class="tab-btn" onclick="switchHistoryTab('disease')">Diseases Detected</button>
+                    </div>
+
+                    <div id="crop-history" class="tab-content active">
+                        <div id="crop-history-list" class="history-list">
+                            <p class="empty-state">No crop health records yet</p>
+                        </div>
+                    </div>
+
+                    <div id="disease-history" class="tab-content" style="display: none;">
+                        <div id="disease-history-list" class="history-list">
+                            <p class="empty-state">No disease records yet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Settings Page -->
+            <div id="profile" class="page" style="display: none;">
+                <div class="page-header">
+                    <h1><i class="fas fa-cog"></i> Profile Settings</h1>
+                    <p>Manage your account and farm information to personalize insights and alerts.</p>
+                </div>
+
+                <div class="section-intro">
+                    <div class="intro-item">
+                        <h4>Personal Details</h4>
+                        <p>Keep your name and contact info updated for reports and notifications.</p>
+                    </div>
+                    <div class="intro-item">
+                        <h4>Farm Profile</h4>
+                        <p>Set crop type, area, and location to refine recommendations.</p>
+                    </div>
+                    <div class="intro-item">
+                        <h4>Data Privacy</h4>
+                        <p>Your profile is only used to personalize results inside this app.</p>
+                    </div>
+                </div>
+
+                <div class="page-content">
+                    <div class="settings-container">
+                        <!-- Personal Info -->
+                        <div class="settings-section">
+                            <h2>Personal Information</h2>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="profile-first-name">First Name</label>
+                                    <input type="text" id="profile-first-name" placeholder="Your first name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="profile-last-name">Last Name</label>
+                                    <input type="text" id="profile-last-name" placeholder="Your last name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="profile-email">Email</label>
+                                    <input type="email" id="profile-email" placeholder="Your email" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="profile-phone">Phone</label>
+                                    <input type="tel" id="profile-phone" placeholder="Your phone number">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Farm Info -->
+                        <div class="settings-section">
+                            <h2>Farm Information</h2>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="profile-location">Location</label>
+                                    <input type="text" id="profile-location" placeholder="Farm location/address">
+                                </div>
+                                <div class="form-group">
+                                    <label for="profile-crop-type">Crop Type</label>
+                                    <select id="profile-crop-type">
+                                        <option value="">Select crop type</option>
+                                        <option value="wheat">Wheat</option>
+                                        <option value="corn">Corn</option>
+                                        <option value="rice">Rice</option>
+                                        <option value="soybean">Soybean</option>
+                                        <option value="cotton">Cotton</option>
+                                        <option value="vegetables">Vegetables</option>
+                                        <option value="fruit">Fruit</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="profile-field-area">Field Area (hectares)</label>
+                                    <input type="number" id="profile-field-area" placeholder="0.00" step="0.01">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary btn-lg" onclick="updateProfile()">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Crop Database Page -->
+            <div id="crop-database" class="page" style="display: none;">
+                <div class="page-header">
+                    <h1><i class="fas fa-database"></i> Crop Database</h1>
+                    <p>Complete information about crops suitable for your region, season, and climate.</p>
+                </div>
+
+                <div class="section-intro">
+                    <div class="intro-item">
+                        <h4>Season Filters</h4>
+                        <p>Filter crops by season to quickly narrow down the best options.</p>
+                    </div>
+                    <div class="intro-item">
+                        <h4>Crop Profiles</h4>
+                        <p>Review growth duration, water needs, and ideal temperature ranges.</p>
+                    </div>
+                    <div class="intro-item">
+                        <h4>Planning Support</h4>
+                        <p>Use the database to match crop choices with current field conditions.</p>
+                    </div>
+                </div>
+                
+                <div class="filter-section" style="margin-bottom: 2rem;">
+                    <div class="form-group" style="max-width: 400px;">
+                        <label for="crop-filter">Filter by Season:</label>
+                        <select id="crop-filter" onchange="filterCropsBySeason(this.value)">
+                            <option value="">All Seasons</option>
+                            <option value="Winter">Winter</option>
+                            <option value="Summer">Summer</option>
+                            <option value="Spring">Spring</option>
+                            <option value="Fall">Fall</option>
+                            <option value="Monsoon">Monsoon</option>
+                            <option value="Year-round">Year-round</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="crop-cards-container" id="crop-db-container">
+                    <div style="text-align: center; padding: 3rem; background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border-radius: 10px;">
+                        <i class="fas fa-database" style="font-size: 3rem; color: #2e7d32;"></i>
+                        <h3 style="color: #2e7d32; margin: 1rem 0;">Loading Crop Database</h3>
+                        <p style="color: #666;">Please wait while we fetch the crop information...</p>
+                        <div style="margin-top: 1rem;">
+                            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #2e7d32;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Crop Recommendations (Tips) Page -->
+            <div id="recommendations" class="page" style="display: none;">
+                <div class="page-header">
+                    <h1><i class="fas fa-lightbulb"></i> Smart Crop Tips & Recommendations</h1>
+                    <p>Get AI-powered recommendations for your location and current conditions.</p>
+                </div>
+
+                <div class="section-intro">
+                    <div class="intro-item">
+                        <h4>Location Aware</h4>
+                        <p>Recommendations are based on latitude and longitude for climate matching.</p>
+                    </div>
+                    <div class="intro-item">
+                        <h4>Seasonal Guide</h4>
+                        <p>Quick planting suggestions help you align with the right season.</p>
+                    </div>
+                    <div class="intro-item">
+                        <h4>Actionable Tips</h4>
+                        <p>Practical advice for soil, water, and timing to improve yields.</p>
+                    </div>
+                </div>
+                
+                <div class="recommendations-layout">
+                    <div class="recommendations-section">
+                        <div class="card content-card">
+                            <h3><i class="fas fa-map-marker-alt"></i> Location-Based Recommendations</h3>
+                            <p style="color: #666; margin-bottom: 1.5rem;">Enter your farm coordinates to get crop suggestions</p>
+                            
+                            <div class="form-group">
+                                <label for="rec-latitude">Latitude</label>
+                                <input type="number" id="rec-latitude" placeholder="28.7041" step="0.0001">
+                                <small>e.g., 28.7041 (North India)</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="rec-longitude">Longitude</label>
+                                <input type="number" id="rec-longitude" placeholder="77.1025" step="0.0001">
+                                <small>e.g., 77.1025 (Delhi)</small>
+                            </div>
+                            <button class="btn btn-primary" onclick="getCropRecommendations()">
+                                <i class="fas fa-search"></i> Get Recommendations
+                            </button>
+                        </div>
+
+                        <div class="card content-card" style="margin-top: 1.5rem;">
+                            <h3><i class="fas fa-chart-line"></i> Seasonal Planting Guide</h3>
+                            <div class="season-timeline">
+                                <div class="season-item">
+                                    <strong>🌸 Spring (Feb-May)</strong>
+                                    <p>Rice, Cotton, Maize, Vegetables</p>
+                                </div>
+                                <div class="season-item">
+                                    <strong>☀️ Summer (Mar-Jun)</strong>
+                                    <p>Watermelon, Muskmelon, Cucumber</p>
+                                </div>
+                                <div class="season-item">
+                                    <strong>🍂 Monsoon (Jun-Sep)</strong>
+                                    <p>Rice, Soybean, Cotton, Groundnut</p>
+                                </div>
+                                <div class="season-item">
+                                    <strong>❄️ Winter (Oct-Mar)</strong>
+                                    <p>Wheat, Mustard, Potato, Peas</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="recommendations-results">
+                        <div id="recommendations-result" class="result-container">
+                            <div style="text-align: center; padding: 3rem; background: linear-gradient(135deg, #e3f2fd, #bbdefb); border-radius: 10px;">
+                                <i class="fas fa-lightbulb" style="font-size: 3rem; color: #1976d2;"></i>
+                                <h3 style="color: #1976d2; margin: 1rem 0;">Get Smart Recommendations</h3>
+                                <p style="color: #666;">Enter your farm coordinates on the left to receive personalized crop recommendations based on your location and climate conditions.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 3rem; background: #f0f7ff; padding: 2rem; border-radius: 10px;">
+                    <h3><i class="fas fa-info-circle"></i> Crop Selection Tips</h3>
+                    <div class="tips-grid">
+                        <div class="tip-card">
+                            <h4><i class="fas fa-thermometer-half"></i> Temperature</h4>
+                            <p>Match your crop to seasonal temperature ranges for optimal growth and yield</p>
+                            <small style="color: #666;">• Cool season: 15-20°C<br>• Warm season: 25-35°C</small>
+                        </div>
+                        <div class="tip-card">
+                            <h4><i class="fas fa-droplet"></i> Water Requirements</h4>
+                            <p>Consider rainfall patterns and irrigation capabilities for your region</p>
+                            <small style="color: #666;">• Low: 300-500mm<br>• Medium: 500-800mm<br>• High: 800mm+</small>
+                        </div>
+                        <div class="tip-card">
+                            <h4><i class="fas fa-flask"></i> Soil Quality</h4>
+                            <p>Test soil pH and nutrient levels before selecting crops</p>
+                            <small style="color: #666;">• pH 6.0-7.5 is ideal<br>• Add organic matter for fertility</small>
+                        </div>
+                        <div class="tip-card">
+                            <h4><i class="fas fa-calendar"></i> Duration</h4>
+                            <p>Select crops that fit your growing season length</p>
+                            <small style="color: #666;">• Short: 60-90 days<br>• Medium: 90-120 days<br>• Long: 120+ days</small>
+                        </div>
+                        <div class="tip-card">
+                            <h4><i class="fas fa-coins"></i> Market Demand</h4>
+                            <p>Research market prices and demand trends</p>
+                            <small style="color: #666;">• Check local market rates<br>• Consider storage needs</small>
+                        </div>
+                        <div class="tip-card">
+                            <h4><i class="fas fa-shield"></i> Disease Resistance</h4>
+                            <p>Choose varieties with good disease resistance</p>
+                            <small style="color: #666;">• Use certified seeds<br>• Rotate crops annually</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 10px;">
+                    <h3 style="color: white; margin-top: 0;"><i class="fas fa-star"></i> Pro Tips for Better Yields</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                        <div>
+                            <h4 style="color: #ffd700;">🌱 Seed Selection</h4>
+                            <p style="margin: 0;">Always use certified, high-quality seeds from reputable sources for better germination and disease resistance.</p>
+                        </div>
+                        <div>
+                            <h4 style="color: #ffd700;">💧 Irrigation Timing</h4>
+                            <p style="margin: 0;">Water crops early morning or evening to minimize evaporation and maximize absorption.</p>
+                        </div>
+                        <div>
+                            <h4 style="color: #ffd700;">🔄 Crop Rotation</h4>
+                            <p style="margin: 0;">Rotate different crop families to prevent soil depletion and break pest cycles.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Maintenance Guide Page -->
+            <div id="maintenance" class="page" style="display: none;">
+                <div class="page-header">
+                    <h1><i class="fas fa-wrench"></i> Crop Maintenance Guide</h1>
+                    <p>Complete step-by-step care instructions for each crop throughout its lifecycle.</p>
+                </div>
+
+                <div class="section-intro">
+                    <div class="intro-item">
+                        <h4>Stage-by-Stage</h4>
+                        <p>See irrigation, fertilization, and pest control steps for each stage.</p>
+                    </div>
+                    <div class="intro-item">
+                        <h4>Quick Tips</h4>
+                        <p>Use the checklist to avoid common maintenance mistakes.</p>
+                    </div>
+                    <div class="intro-item">
+                        <h4>Best Practices</h4>
+                        <p>Structured guidance to improve quality and reduce crop loss.</p>
+                    </div>
+                </div>
+                
+                <div class="maintenance-layout">
+                    <div class="maintenance-selector">
+                        <div class="card content-card">
+                            <h3><i class="fas fa-seedling"></i> Select Your Crop</h3>
+                            <div class="form-group">
+                                <label for="crop-select">Choose a crop to view maintenance guide:</label>
+                                <select id="crop-select" onchange="getMaintenanceGuide()">
+                                    <option value="">-- Select a crop --</option>
+                                    <option value="Wheat">🌾 Wheat</option>
+                                    <option value="Rice">🍚 Rice</option>
+                                    <option value="Maize">🌽 Maize</option>
+                                    <option value="Cotton">🤍 Cotton</option>
+                                    <option value="Potato">🥔 Potato</option>
+                                    <option value="Tomato">🍅 Tomato</option>
+                                    <option value="Sugarcane">🛢️ Sugarcane</option>
+                                    <option value="Soybean">🫘 Soybean</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="card content-card" style="margin-top: 1.5rem;">
+                            <h3><i class="fas fa-lightbulb"></i> Quick Tips</h3>
+                            <ul class="tips-list">
+                                <li><strong>Seedling Stage:</strong> Keep soil moist, provide protection</li>
+                                <li><strong>Growth Stage:</strong> Regular irrigation and nutrient application</li>
+                                <li><strong>Blooming:</strong> Increase fertilizer, reduce some irrigation</li>
+                                <li><strong>Harvest:</strong> Monitor maturity carefully</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="maintenance-details">
+                        <div id="maintenance-result" class="result-container">
+                            <div style="text-align: center; padding: 3rem; background: linear-gradient(135deg, #e3f2fd, #bbdefb); border-radius: 10px;">
+                                <i class="fas fa-seedling" style="font-size: 3rem; color: #1976d2;"></i>
+                                <h3 style="color: #1976d2; margin: 1rem 0;">Select a Crop</h3>
+                                <p style="color: #666;">Choose a crop from the dropdown menu on the left to view its complete maintenance guide with detailed care instructions, fertilizer schedules, and pest management tips.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Soil Health Page -->
+            <div id="soil-health" class="page" style="display: none;">
+                <div class="page-header">
+                    <h1><i class="fas fa-leaf"></i> Soil Health & Analysis</h1>
+                    <p>Test and improve your soil for better crop yields and sustainable farming.</p>
+                </div>
+
+                <div class="section-intro">
+                    <div class="intro-item">
+                        <h4>pH Insights</h4>
+                        <p>Identify soil acidity or alkalinity and see recommended corrections.</p>
+                    </div>
+                    <div class="intro-item">
+                        <h4>Suitable Crops</h4>
+                        <p>Find crops that thrive in your soil conditions.</p>
+                    </div>
+                    <div class="intro-item">
+                        <h4>Long-Term Health</h4>
+                        <p>Use improvement tips to build soil fertility over time.</p>
+                    </div>
+                </div>
+                
+                <div class="soil-layout">
+                    <div class="soil-test-section">
+                        <div class="card content-card">
+                            <h3><i class="fas fa-flask-vial"></i> Soil pH Analyzer</h3>
+                            <p style="color: #666; margin-bottom: 1.5rem;">Measure your soil pH to determine soil health and suitability</p>
+                            
+                            <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                                <h4 style="margin-bottom: 1rem; color: #333;">pH Scale Reference</h4>
+                                <div class="ph-scale">
+                                    <div class="ph-item acidic">Highly Acidic<br><small>&lt;5.5</small></div>
+                                    <div class="ph-item" style="background: linear-gradient(135deg, #ffb74d, #ffa726);">Acidic<br><small>5.5-6.5</small></div>
+                                    <div class="ph-item neutral" style="background: linear-gradient(135deg, #81c784, #66bb6a);">Neutral/Best<br><small>6.5-7.5</small></div>
+                                    <div class="ph-item alkaline">Alkaline<br><small>7.5-8.5</small></div>
+                                    <div class="ph-item alkaline" style="background: linear-gradient(135deg, #e57373, #ef5350);">Highly Alkaline<br><small>&gt;8.5</small></div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="ph-value">Enter Soil pH Level (0-14)</label>
+                                <input type="range" id="ph-range" min="0" max="14" step="0.1" value="7" oninput="updatePhDisplay()">
+                                <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                                    <input type="number" id="ph-value" placeholder="7.0" min="0" max="14" step="0.1" value="7" oninput="updatePhRange()">
+                                    <button class="btn btn-primary" onclick="analyzeSoilHealth()">
+                                        <i class="fas fa-flask"></i> Analyze
+                                    </button>
+                                </div>
+                                <small style="color: #999;">Optimal range for most crops: 6.0-7.5</small>
+                            </div>
+                        </div>
+
+                        <div class="card content-card" style="margin-top: 1.5rem;">
+                            <h3><i class="fas fa-list-check"></i> Soil Testing Checklist</h3>
+                            <ul class="tips-list">
+                                <li><i class="fas fa-check"></i> <strong>How to Test:</strong> Use a soil test kit or send to laboratory</li>
+                                <li><i class="fas fa-check"></i> <strong>When to Test:</strong> Before planting season (6-8 weeks prior)</li>
+                                <li><i class="fas fa-check"></i> <strong>Sample:</strong> Collect from 3-4 locations in field</li>
+                                <li><i class="fas fa-check"></i> <strong>Depth:</strong> Take samples from 6-8 inches deep</li>
+                                <li><i class="fas fa-check"></i> <strong>Results:</strong> Request full nutrient analysis (N, P, K, micronutrients)</li>
+                                <li><i class="fas fa-check"></i> <strong>Frequency:</strong> Test soil every 2-3 years</li>
+                            </ul>
+                        </div>
+
+                        <div class="card content-card" style="margin-top: 1.5rem; background: linear-gradient(135deg, #e8f5e9, #c8e6c9);">
+                            <h3 style="color: #2e7d32;"><i class="fas fa-microscope"></i> Soil Nutrient Guide</h3>
+                            <div style="display: grid; gap: 0.75rem;">
+                                <div style="background: white; padding: 0.75rem; border-radius: 6px;">
+                                    <strong style="color: #2e7d32;">Nitrogen (N):</strong> Promotes leafy growth
+                                </div>
+                                <div style="background: white; padding: 0.75rem; border-radius: 6px;">
+                                    <strong style="color: #2e7d32;">Phosphorus (P):</strong> Enhances root development
+                                </div>
+                                <div style="background: white; padding: 0.75rem; border-radius: 6px;">
+                                    <strong style="color: #2e7d32;">Potassium (K):</strong> Improves disease resistance
+                                </div>
+                                <div style="background: white; padding: 0.75rem; border-radius: 6px;">
+                                    <strong style="color: #2e7d32;">Calcium (Ca):</strong> Strengthens cell walls
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="soil-results">
+                        <div id="soil-result" class="result-container">
+                            <div style="text-align: center; padding: 3rem; background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border-radius: 10px;">
+                                <i class="fas fa-flask-vial" style="font-size: 3rem; color: #2e7d32;"></i>
+                                <h3 style="color: #2e7d32; margin: 1rem 0;">Analyze Your Soil</h3>
+                                <p style="color: #666;">Enter your soil pH value on the left to receive a comprehensive analysis with recommendations for soil improvement and suitable crops.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; background: #fff3e0; padding: 2rem; border-radius: 10px; border-left: 4px solid #ff9800;">
+                    <h3><i class="fas fa-graduation-cap"></i> Soil Improvement Guide</h3>
+                    <div class="improvement-grid">
+                        <div class="improvement-card">
+                            <h4>🥗 Organic Matter</h4>
+                            <p>Add compost, manure for better structure</p>
+                            <small style="display: block; margin-top: 0.5rem; color: #666;">Apply 2-3 tons per acre annually</small>
+                        </div>
+                        <div class="improvement-card">
+                            <h4>💧 Drainage</h4>
+                            <p>Improve with proper tilling and amendments</p>
+                            <small style="display: block; margin-top: 0.5rem; color: #666;">Install drainage if waterlogging occurs</small>
+                        </div>
+                        <div class="improvement-card">
+                            <h4>🌱 Microbial Life</h4>
+                            <p>Support with organic farming practices</p>
+                            <small style="display: block; margin-top: 0.5rem; color: #666;">Add bio-fertilizers and compost tea</small>
+                        </div>
+                        <div class="improvement-card">
+                            <h4>⚖️ Nutrient Balance</h4>
+                            <p>Apply fertilizers based on test results</p>
+                            <small style="display: block; margin-top: 0.5rem; color: #666;">Follow soil test recommendations</small>
+                        </div>
+                        <div class="improvement-card">
+                            <h4>🌾 Cover Crops</h4>
+                            <p>Plant legumes to fix nitrogen naturally</p>
+                            <small style="display: block; margin-top: 0.5rem; color: #666;">Use during off-season</small>
+                        </div>
+                        <div class="improvement-card">
+                            <h4>🔄 Mulching</h4>
+                            <p>Conserve moisture and add organic matter</p>
+                            <small style="display: block; margin-top: 0.5rem; color: #666;">Apply 2-3 inch layer</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 10px;">
+                    <h3 style="color: white; margin-top: 0;"><i class="fas fa-lightbulb"></i> Soil Health Benefits</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                        <div>
+                            <h4 style="color: #ffd700; margin: 0;">💪 Better Structure</h4>
+                            <p style="margin: 0.5rem 0 0 0;">Improved water retention and root penetration</p>
+                        </div>
+                        <div>
+                            <h4 style="color: #ffd700; margin: 0;">🌿 More Nutrients</h4>
+                            <p style="margin: 0.5rem 0 0 0;">Increased availability of essential elements</p>
+                        </div>
+                        <div>
+                            <h4 style="color: #ffd700; margin: 0;">🦠 Active Microbes</h4>
+                            <p style="margin: 0.5rem 0 0 0;">Enhanced biological activity and nutrient cycling</p>
+                        </div>
+                        <div>
+                            <h4 style="color: #ffd700; margin: 0;">🛡️ Disease Suppression</h4>
+                            <p style="margin: 0.5rem 0 0 0;">Natural protection against soil-borne diseases</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weather by Location Page -->
+            <div id="weather-location" class="page" style="display: none;">
+                <div class="page-header">
+                    <h1><i class="fas fa-map-marker-alt"></i> Weather by Location</h1>
+                    <p>Get weather information using a map picker or manual coordinates.</p>
+                </div>
+
+                <div class="section-intro">
+                    <div class="intro-item">
+                        <h4>Map Selection</h4>
+                        <p>Click on the map or search for a place to pull local conditions.</p>
+                    </div>
+                    <div class="intro-item">
+                        <h4>Manual Entry</h4>
+                        <p>Enter latitude and longitude if you already know your coordinates.</p>
+                    </div>
+                    <div class="intro-item">
+                        <h4>Field Decisions</h4>
+                        <p>Use results to time irrigation, spraying, and harvesting.</p>
+                    </div>
+                </div>
+                
+                <div class="weather-location-content">
+                    <div class="map-section">
+                        <div class="card content-card">
+                            <h3><i class="fas fa-map"></i> Select Location on Map</h3>
+                            <p style="color: #666; margin-bottom: 1rem;">Click on the map to select your location or search for a place</p>
+                            
+                            <div class="map-controls" style="margin-bottom: 1rem;">
+                                <input type="text" id="map-search-input" placeholder="Search for a location..." 
+                                    style="width: 100%; padding: 0.75rem; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem;">
+                            </div>
+                            
+                            <div id="weather-map" style="width: 100%; height: 400px; border-radius: 8px; border: 2px solid #ddd;"></div>
+                            
+                            <div style="margin-top: 1rem; padding: 1rem; background: #f5f5f5; border-radius: 8px;">
+                                <p style="margin: 0; color: #666;"><i class="fas fa-info-circle"></i> Click anywhere on the map to get weather data for that location</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="location-form-section">
+                        <div class="card content-card">
+                            <h3><i class="fas fa-keyboard"></i> Or Enter Manually</h3>
+                            
+                            <div class="form-group">
+                                <label for="location-latitude">Latitude</label>
+                                <input type="number" id="location-latitude" placeholder="28.7041" step="0.0001">
+                                <small>e.g., 28.7041 (Delhi, India)</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="location-longitude">Longitude</label>
+                                <input type="number" id="location-longitude" placeholder="77.1025" step="0.0001">
+                                <small>e.g., 77.1025 (Delhi, India)</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="location-name">Location Name (Optional)</label>
+                                <input type="text" id="location-name" placeholder="e.g., Delhi, India">
+                            </div>
+                            <button class="btn btn-primary" onclick="getWeatherByLocation()">
+                                <i class="fas fa-cloud-sun"></i> Get Weather
+                            </button>
+                        </div>
+
+                        <div class="card content-card" style="margin-top: 1.5rem; background: linear-gradient(135deg, #e3f2fd, #bbdefb);">
+                            <h3 style="color: #1976d2;"><i class="fas fa-location-dot"></i> Popular Locations</h3>
+                            <div style="display: grid; gap: 0.5rem;">
+                                <button class="location-quick-btn" onclick="setLocation(28.7041, 77.1025, 'Delhi')">
+                                    🏛️ Delhi, India
+                                </button>
+                                <button class="location-quick-btn" onclick="setLocation(19.0760, 72.8777, 'Mumbai')">
+                                    🏙️ Mumbai, India
+                                </button>
+                                <button class="location-quick-btn" onclick="setLocation(13.0827, 80.2707, 'Chennai')">
+                                    🌴 Chennai, India
+                                </button>
+                                <button class="location-quick-btn" onclick="setLocation(12.9716, 77.5946, 'Bangalore')">
+                                    🌳 Bangalore, India
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="weather-location-result" class="result-container" style="margin-top: 2rem;"></div>
+
+                <div style="margin-top: 2rem; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 10px;">
+                    <h3 style="color: white; margin-top: 0;"><i class="fas fa-lightbulb"></i> Weather Data Uses</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                        <div>
+                            <h4 style="color: #ffd700; margin: 0;">🌱 Planting Time</h4>
+                            <p style="margin: 0.5rem 0 0 0;">Determine optimal planting dates based on temperature and rainfall</p>
+                        </div>
+                        <div>
+                            <h4 style="color: #ffd700; margin: 0;">💧 Irrigation</h4>
+                            <p style="margin: 0.5rem 0 0 0;">Plan irrigation schedule according to precipitation forecasts</p>
+                        </div>
+                        <div>
+                            <h4 style="color: #ffd700; margin: 0;">🌾 Harvesting</h4>
+                            <p style="margin: 0.5rem 0 0 0;">Choose dry days for harvesting to ensure crop quality</p>
+                        </div>
+                        <div>
+                            <h4 style="color: #ffd700; margin: 0;">🛡️ Pest Control</h4>
+                            <p style="margin: 0.5rem 0 0 0;">Apply treatments during favorable weather conditions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Loading Spinner -->
+    <div id="loading" class="loading" style="display: none;">
+        <div class="spinner"></div>
+        <p>Processing...</p>
+    </div>
+
+    <!-- Notification Panel -->
+    <div id="notification-panel" class="notification-panel">
+        <div class="notification-header">
+            <h3>Notifications</h3>
+            <button onclick="toggleNotifications()" class="close-btn"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="notification-list" class="notification-list">
+            <p class="empty-state">No notifications</p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
