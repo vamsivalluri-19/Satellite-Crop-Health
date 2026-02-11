@@ -2,6 +2,10 @@
 
 End-to-end crop monitoring app with a Flask backend and a rich dashboard UI. It combines NDVI-based health checks, AI-style disease detection (simulated), weather lookups, recommendations, and soil health guidance.
 
+Live site:
+
+https://satellite-crop-health.onrender.com
+
 ## Features
 
 - Crop health checks using NDVI (simulated satellite data)
