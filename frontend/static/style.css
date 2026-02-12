@@ -1146,6 +1146,12 @@ h1, h2, h3 {
         font-size: 1.5rem;
     }
 
+    .sidebar-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
 /* Recommendations Layout */
 .recommendations-layout {
     display: grid;
@@ -1408,6 +1414,29 @@ input[type="range"]::-moz-range-thumb {
     }
 }
 
+@media (max-width: 480px) {
+    .auth-page {
+        padding: 1.25rem;
+    }
+
+    .auth-box {
+        padding: 1.5rem 1.25rem;
+    }
+
+    .farmer-image {
+        width: 220px;
+        height: 220px;
+    }
+
+    .stats-container,
+    .action-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .nav-item {
+        font-size: 0.8rem;
+    }
+}
 .crop-cards-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -1831,12 +1860,5 @@ select:focus {
     
     .season-timeline {
         grid-template-columns: 1fr;
-    }
-}
-
-    .sidebar-toggle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
     }
 }
